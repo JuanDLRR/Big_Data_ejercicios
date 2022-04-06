@@ -1,0 +1,421 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "name": "Entrega ejercicio EDA.ipynb",
+      "provenance": [],
+      "collapsed_sections": []
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# Carga de librerías y paquetes \n",
+        "En esta sección usted debera cargar las librerias que considere necesarias para realizar el análisis EDA"
+      ],
+      "metadata": {
+        "id": "8GOsx3CdvLae"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# code here\n",
+        "import numpy as np\n",
+        "import pandas as pd\n",
+        "import matplotlib.pyplot as plt\n",
+        "import seaborn as sns"
+      ],
+      "metadata": {
+        "id": "CD7i2Fbqvgqn"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "***Justificacion aqui: ***\n",
+        "Se importan numpy y pandas debido a que el volumen de datos que se va amanejar es muy grandes y estas dos librerias facilitan el trabajo en estos casos ademas de tener herramientas utiles para el manejo de grandes volumenes de datos."
+      ],
+      "metadata": {
+        "id": "UBrgOpxsDymQ"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# Carga de dataset inicial\n",
+        "En esta sección usted deberá cargar los datos de reservas de hotel en una estructura de datos que le permita realizar el EDA. Se recomienda realizar las siguientes acciones:\n",
+        "\n",
+        "\n",
+        "* Dar un vistazo a algunos registros del Dataset\n",
+        "* Conocer las dimensiones del dataset\n",
+        "* Obtener información de las columnas y sus tipos de datos\n",
+        "* Conocer cuantas columnas hay por los diferentes tipos\n"
+      ],
+      "metadata": {
+        "id": "lnqowwSWvfla"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "#lectura del dataset\n",
+        "\n",
+        "datos = pd.read_csv(\"hotel_bookings.csv\")\n",
+        "\n",
+        "#configuracion de la cantidad de columnas mostradas\n",
+        "\n",
+        "pd.set_option('display.max_rows', None)\n",
+        "\n",
+        "#Dar un vistazo a algunos registros\n",
+        "\n",
+        "print(datos.head(2))\n",
+        "\n",
+        "#n es la cantidad de filas que se desean consultar.\n",
+        "\n",
+        "#conocer las dimensiones del dataset\n",
+        "\n",
+        "print( \"las dimensiones del dataset son: \\n\", datos.shape)\n",
+        "\n",
+        "#obtener informacion de las columnas y sus tipos y mostrar cuantas columnas hay \n",
+        "#por cada tipo de datos\n",
+        "\n",
+        "print(datos.info())\n"
+      ],
+      "metadata": {
+        "id": "wTcJ3KT2v1gD"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "***Justificación aquí***: para realizar la visualizacion de los registros dentro del dataset se usa la funcion \".head(n)\", donde n es la cantidad de registros que se quieren ver dentro del dataset.\n",
+        "\n",
+        "Para poder conocer las idmensiones del data set se usa la funcion \".shape\" que imprime el tamaño del dataset de la forma (X*Y) donde X son las filas y Y son las columnas.\n",
+        "\n",
+        "Usando la funcion \".info()\" muestra toda la informacion del data set, incluyendo los titulos de las columnas, cuantos datos contienen y que tipo de datos se almacenan en cada columna."
+      ],
+      "metadata": {
+        "id": "udfUIZeXD5ZS"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# Tratamiento de datos faltantes\n",
+        "\n",
+        "Es importante establecer la calidad y cantidad de registros, para ello es necesario identificar la cantidad de registros con las que se cuenta y tomar acciones sobre que hacer respecto a esos datos faltantes. Se recomienda realizar las siguientes acciones:\n",
+        "\n",
+        "* Identifique que columnas tienen datos faltantes\n",
+        "* Haga un reporte de datos faltantes\n",
+        "* Establezca una estrategia para esos datos faltantes. Se proponen tres alternativas a considerar: 1) Eliminar registros y 2) Reemplazar datos con valores por defecto y 3) Remover variables que tienen más del 25% de datos faltantes"
+      ],
+      "metadata": {
+        "id": "tZ9tpz28v2SR"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "#identificar datos faltantes\n",
+        "\n",
+        "columnas_con_null=datos.columns[datos.isnull().any()]\n",
+        "print(\"las columnas que presentan datos faltantes son: \\n\")\n",
+        "print(datos[columnas_con_null].isnull().sum())\n",
+        "print(\"\\n \\n\")\n",
+        "\n",
+        "#reporte de datos faltantes\n",
+        "\n",
+        "print(datos.isnull().mean() * 100)\n",
+        "\n",
+        "#solucion al problema de datos faltantes (reemplazarlos por valores por defecto)\n",
+        "\n",
+        "#df[\"children\"].fillna(\"0\", inplace = True)\n",
+        "#df[\"agent\"].fillna(\"None\", inplace = True)\n",
+        "#df[\"country\"].fillna(\"Not especified\", inplace = True)\n",
+        "#df[\"company\"].fillna(\"None\", inplace = True)"
+      ],
+      "metadata": {
+        "id": "EVDKHtX71Rkv"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "***Justificación aquí***: Para poder identificar los datos faltantes se usa la funcion de pandas \".columns[ ]\" para recorrer todas las columnas dentro del dataset y en conjunto a esto se usa la funcion \".isnull().any()\" para saber que columnas tienen datos faltanttes. Despues con la linea de codigo \"print(df[null_columns].isnull().sum())\" lo que se hace es que nombre que columnas tienen datos faltantes (almacenadas en la variable columnas_con_null) y que sume la cantidad de valores TRUE que arroje la funcion \".isnull()\" al encontrar un valor NULL que se presenten en estas columnas generando un reporte de estos datos.\n",
+        "\n",
+        "Para poder generar un reporte junto al porcentaje de datos NULL que poseen estas mismas columnas se utiliza la funcion \".isnull()\" para que busque cuantos valores NULL existen y en conjunto con la funcion \".mean()\" para calcular la media aritmetica de la suma de datos null y se multiplica con 100 para dar un valor porcentual.\n",
+        "\n",
+        "Finalmente para dar solucion a la cantidad de datos faltantes dentro de las columnas arrojadas por el codigo anteriormente se eligio la opcion de \"Reemplazar por valores por defecto\". Primero se seleccionan las columnas que contienen datos NULL para posteriormente decirle que rellene esos valores con un valor por defecto usando la linea de codigo \"df[\"XXXX\"].fillna(\"0\", inplace = True)\" donde \"XXXX\" es el nombre de la coluna, lo que hace esta linea de codigo es recorrer la columna deseada y rellenar cada espacio NULL con un valor que le demos ya sea numerico o un string."
+      ],
+      "metadata": {
+        "id": "34YgBZ_vD6fT"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# Nuevas variables\n",
+        "En ocaciones pueden establecer nuevas variables a partir de unas existentes, esto se puede realizar para facilitar procesos de análisis posteriores. Se recomienda realizar las siguientes acciones:\n",
+        "\n",
+        "* Identificar si en la reserva hay alguna clase de niño\n",
+        "* Convertir nombre del mes en valor númerico"
+      ],
+      "metadata": {
+        "id": "0te6NeJP1vv3"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# identificar que reservas tienen niños\n",
+        "\n",
+        "hay_niños = datos.eval('sum = children + babies')\n",
+        "hay_niños[result['sum']>0][['babies','children','sum']]\n",
+        "\n",
+        "# cambiar el nombre del mes a numero\n",
+        "\n",
+        "datos['arrival_date_month'].replace(['January', 'February', 'March', 'April', 'May', 'June', 'July','August','September','October','November','December'],['1', '2', '3', '4', '5', '6','7','8','9','10','11','12'])"
+      ],
+      "metadata": {
+        "id": "lLiDD8Nw3XF4"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "***Justificación aquí***: Para poder saber si existen niños dentro de una reserva ( y su total en caso de haber niños y bebés) se usa la funion \".eval()\"para que evalue la expresion \"sum=children+babies\" con la que se busca que sume los valores dentro de las dos columnas homonimas dentro del data set. luego se pide que muestre los datos y hacemos uso de un dataset temporal llamado \"result\" el que contendra los resultados de 'sum' mayores a 0 y se le pide que los muestre en las columnas \"babies, children, sum\".\n",
+        "\n",
+        "Para realizar el cambio de los nombres de los meses de la reserva por el numero del mes, se crean 2 diccionarios uno con los nombres de los meses y otro con los numeros correspondientes en las mismas posiciones para que, por ejemplo, enero corresponda con 1. entonces se usa la funcion \".replace()\" para que realice el cambio en la columna deseada dentro del dataset."
+      ],
+      "metadata": {
+        "id": "qiml04kMD7fL"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# Identificación de metas y objetivos\n",
+        "\n",
+        "Lo más importante en un proyecto es siempre identificar que se quiere realizar con los datos. Por ello es importante establecer una variable objetivo y las variables independientes. En este ejercicio se recomienda lo siguiente:\n",
+        "\n",
+        "* Escoger como variable objetivo las cancelaciones\n",
+        "* Escoger como variables independientes el resto de columnas"
+      ],
+      "metadata": {
+        "id": "aly2TP_a3X3t"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# guardar la columna cancelaciones en una variable\n",
+        "\n",
+        "var_estudio = datos.loc[:,['is_canceled']]\n",
+        "\n",
+        "#guardar las demas columnas como variable independiente\n",
+        "\n",
+        "var_indpt = datos.loc[:,['lead_time','arrival_date_year','arrival_date_week_number','arrival_date_day_of_month','stays_in_weekend_nights','stays_in_week_nights','adults','children','babies','is_repeated_guest','previous_cancellations','previous_bookings_not_canceled','booking_changes','agent','company','days_in_waiting_list','adr','required_car_parking_spaces','total_of_special_requests']]\n"
+      ],
+      "metadata": {
+        "id": "sxpa_M5F8Wng"
+      },
+      "execution_count": 34,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "***Justificación aquí***: para guardar dentro de una sola variable la columna \"is_canceled\" se crea la variable \"var_estudio\" y con la funcion \".loc[]\" la cual permite seleccionar columas en funcion de su nombre, entonces lo que se hace es seleccionar la columna deseada y decirle que haga que la variable \"var_estudio\" guarde los datos de dicha columna dentro de esta varable.\n",
+        "\n",
+        "para guardar las demas columnas en una variable diferente se usa el mismo metodo anterior, pero se seleccionan todas las demas columnas excluyendo la que se uso como variable independiente ingresando los nombres de todas las demas una a una dentro de la funcion \".loc[]\""
+      ],
+      "metadata": {
+        "id": "Yt44wnBED8a7"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# Exploración de datos (#1 - Outliers)\n",
+        "\n",
+        "Siempre es bueno dar un vistazo a los datos y ver como están distribuidas algunas variables. Con esto se puede establecer si hay datos que puedan generar mucho ruido en el análisis y que acciones seguir. Para esto se recomienda:\n",
+        "\n",
+        "* Ver la distribucción de las variables\n",
+        "* Identificar outliers\n",
+        "* Tomar una decision de si se deben remover esos registros o si se van a conservar"
+      ],
+      "metadata": {
+        "id": "5mq87M0H5OYj"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# distribucion de variables\n",
+        "\n",
+        "from scipy import stats\n",
+        "columnas_numericas = datos.select_dtypes(['int', 'float']).columns\n",
+        "for num_col in columnas_numericas:\n",
+        "    _, pval = stats.normaltest(datos[num_col])\n",
+        "    if(pval < 0.05):\n",
+        "        print(\"Columna {} no sigue una distribución normal\".format(num_col))\n",
+        "    else:\n",
+        "      print(\"columna {} sigue una distribucion normal\".format(num_col))\n",
+        "\n",
+        "# outliers\n",
+        "\n",
+        "sns.boxplot(x = datos['company'])\n",
+        "plt.show()\n",
+        "\n",
+        "sns.distplot(datos['company'], bins = 15, kde = False)\n",
+        "plt.show()"
+      ],
+      "metadata": {
+        "id": "YFKRt8qT5M_9"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "***Justificación aquí***: se usa la libreria scipy importando la funcion stats para poder analizar la distribucion de las columnas dentro del data set e irlas imprimiedo para saber si poseen una distribucion normal o no usando la funcion \".stats.normaltest()\" para analizar las columnas y dentro de un if se usa un condicional para medir, junto con un nivel de confinza predeterminado, y asi poder definir si posee una distribucion normal o no.\n",
+        "\n",
+        "para identificar los outliner en una columna dada se usa la libreria seaborn para hacer un diagrama de cajas de la columna deseada y asi poder analizar de forma grafica si hay o no outliners y en que parte del grafico se ubican, ademas se usa un diagrama de barras para mirar la tendenca de ubicacion de estos valores extremos."
+      ],
+      "metadata": {
+        "id": "5HMI2hZYD9QD"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# Exploración de datos (#2 - Análisis univariado)\n",
+        "\n",
+        "Ya que se tiene una idea mejor de como estan organizados los datos, es hora de iniciar a realizar diferentes tipos de análisis exploratorios, dependiendo del tipo de información que estemos manejando. Para esto se recomienda:\n",
+        "\n",
+        "* Separe las variables por tipo de datos\n",
+        "* Identifique el número de categorias por cada variable cualitativas\n",
+        "* Realice un resumen de datos con la variables cuantitativas"
+      ],
+      "metadata": {
+        "id": "CtF_ZIFs8ZBR"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# code here"
+      ],
+      "metadata": {
+        "id": "gPbNCAhu-txk"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "*Justificación aquí*"
+      ],
+      "metadata": {
+        "id": "ym1cAs2MD-M7"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# Exploración de datos (#3 - Comparación de variables)\n",
+        "\n",
+        "Ya se tienen un objetivo en mente, ahora hay que analizar ese objetivo como se relaciona con las demás variables. En este momento se debe iniciar a comparar la variable objetivo respecto a las demás. Se recomienda realizar lo siguiente:\n",
+        "\n",
+        "* Compare las variable cuantitativas vs la variable objetivo. \n",
+        "* Compare los datos cualitativos vs la variable objetivo. \n",
+        "\n",
+        "Para ambos puntos se recomienda colocar el promedio de la variable objetivo para ver que tan alejados están los datos de la media y la varianza. "
+      ],
+      "metadata": {
+        "id": "DPHCI-0hBgPT"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# code here"
+      ],
+      "metadata": {
+        "id": "IORFZP-DDtgb"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "*Justificación aquí*"
+      ],
+      "metadata": {
+        "id": "Sta2o3gaD_e8"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# Exploración de datos (#4 - Preguntas adicionales)\n",
+        "\n",
+        "Es normal que nos surjan algunas preguntas que puedan ser de interes general para el proyecto y que paralelamente ayuden a tener una mejor idea de la información que estamos manejando. Una forma de generar preguntas interesantes es cuando comparamos variables entre ellas. Se recomienda realizar lo siguiente:\n",
+        "\n",
+        "* Identificar país de origen de los huespedes\n",
+        "* Identificar la segmenteación de los huespedes y tipo de hospedaje\n",
+        "* Identificar visitantes con niños\n",
+        "* Identificar mes que tiene más visitantes. En este caso es bueno identificar los que vienen con niños, sin niños y totales.\n",
+        "* Cuantos huespedes repiten y que tipo de hospedaje\n",
+        "* Identificar cuantos usan el parqueadero\n",
+        "* Identificar los canales por los cuales se hacen reservas\n",
+        "\n",
+        "NOTA: No se limite a esos no más, deje volar su imaginación"
+      ],
+      "metadata": {
+        "id": "6b9o6Isr-8Z5"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# code here"
+      ],
+      "metadata": {
+        "id": "e8_ye_pVBYk2"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "*Justificación aquí*"
+      ],
+      "metadata": {
+        "id": "a7gqxv98EAu6"
+      }
+    }
+  ]
+}
